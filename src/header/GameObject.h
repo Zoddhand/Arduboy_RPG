@@ -12,11 +12,11 @@ class GameObject {
   public:
 	struct Struct
 	{
-    	    float x = 128;
-    	    float y = 128 - 16;
+    	    float x = 160;
+    	    float y = 0;
     	    float velX = 0;
           float velY = 0;
-          int speed = 1;
+          uint8_t speed = 1;
           uint8_t dir = DOWN;
 	} entity;
 

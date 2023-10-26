@@ -12,11 +12,8 @@ class Map {
 
 
   Map();
-  void draw(Camera);
-  void update();
-  void setTile();
-  int getTile(int, int);
-  void loadMap();
+  void draw(Camera, uint8_t level); // Pass the current level as a parameter
+  int getTile(int x, int y);
   private:
-
+    uint8_t currentLevel;
 };

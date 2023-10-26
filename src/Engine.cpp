@@ -25,12 +25,23 @@ void Engine::setup() {
 
 void Engine::input() {
   arduboy.pollButtons();
-
-    d.checkAndPrintDialog(p, 2, 5, dialogs[0]);
-    d.checkAndPrintDialog(p, 1, 1, dialogs[1]);
-    d.checkAndPrintDialog(p, 2, 2, dialogs[2]);
-    d.checkAndPrintDialog(p, 3, 3, dialogs[3]);
- p.input();
+  if(arduboy.pressed(B_BUTTON))
+  {
+    cam.cOffsetX = 0;
+    cam.cOffsetY = 0;
+    changeLevel(1,&p);
+  }
+  if(arduboy.pressed(A_BUTTON))
+  {
+    cam.cOffsetX = 0;
+    cam.cOffsetY = 0;
+    changeLevel(2,&p);
+  }
+  d.checkAndPrintDialog(p, 2, 5, dialogs[0]);
+  d.checkAndPrintDialog(p, 11, 5, dialogs[1]);
+  d.checkAndPrintDialog(p, 7, 9, dialogs[2]);
+  d.checkAndPrintDialog(p, 13, 13, dialogs[3]);
+  p.input();
 }
 
 void Engine::update(uint8_t dt) {
@@ -40,10 +51,8 @@ void Engine::update(uint8_t dt) {
 }
 
 void Engine::draw() {
-  m.draw(cam);
+  m.draw(cam,curLevel);
   p.draw(cam.cOffsetX, cam.cOffsetY);
-  arduboy.print((int)p.entity.x / tileSize);
-  arduboy.print((int)p.entity.y / tileSize);
 }
 
 // Old but possibly better code. change playerX to be - 8 at the start
@@ -65,11 +74,6 @@ static bool Engine::checkCol(float x, float y)
     bool collisionY = !isTileWalkable(m.getTile(mapX1, mapY1)) || !isTileWalkable(m.getTile(mapX2, mapY1)) || !isTileWalkable(m.getTile(mapX1, mapY2)) || !isTileWalkable(m.getTile(mapX2, mapY2));
 
     return collisionX || collisionY;
-}
-
-void::Engine::nu()
-{
-  int x = 0;
 }
 
 

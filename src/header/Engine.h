@@ -4,13 +4,13 @@
 static Arduboy2 arduboy;
 
 // Constants
-constexpr int tileSize = 16;
-constexpr int mapSizeX = 20;
-constexpr int mapSizeY = 18;
-constexpr uint16_t fullMapWidth = mapSizeX * tileSize;
-constexpr uint16_t fullMapHeight = mapSizeY * tileSize;
-constexpr int screenSizeX = 128;
-constexpr int screenSizeY = 64;
+constexpr uint8_t tileSize = 16;
+static uint8_t mapSizeX = 20;
+static uint8_t mapSizeY = 18;
+static uint16_t fullMapWidth = mapSizeX * tileSize;
+static uint16_t fullMapHeight = mapSizeY * tileSize;
+constexpr uint8_t screenSizeX = 128;
+constexpr uint8_t screenSizeY = 64;
 
 static const uint8_t frameRate = 60;
 
@@ -21,7 +21,6 @@ class Engine {
     void update(uint8_t);
     void draw();
     void setup();
-    void nu();
     
     unsigned long deltaTime;
 
