@@ -1,0 +1,35 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "Tiled/Tileset_16x16.tsx": {
+            "dynamicWrapping": true,
+            "scaleInEditor": 4
+        }
+    },
+    "last.exportedFilePath": "C:/Dev/Arduino/Arduboy/Arduboy_RPG/Tiled",
+    "last.imagePath": "C:/Dev/Arduino/Arduboy/Arduboy_RPG/assets/TILES",
+    "map.height": 18,
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 20,
+    "openFiles": [
+    ],
+    "project": "tiled-project.tiled-project",
+    "recentFiles": [
+        "Tiled/Tileset_16x16.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

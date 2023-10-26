@@ -16,12 +16,13 @@ void loop() {
   if(!arduboy.nextFrame())
 		return;
 
-  unsigned long currentTime = millis();
-	unsigned long deltaTime = currentTime - previousTime;
-	previousTime = currentTime;
-
+  //unsigned long currentTime = millis();
+  uint8_t deltaTime = millis() - previousTime;
+	previousTime = millis();
+  arduboy.clear();
+  e.draw();
   e.input();
   e.update(deltaTime);
-  e.draw();
+  arduboy.display();
 }
 

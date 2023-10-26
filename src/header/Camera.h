@@ -9,7 +9,8 @@ class Camera {
 
   int visibleTilesX, visibleTilesY; 
 	float cameraX = 0.0f, cameraY = 0.0f; 
-	float cOffsetX = 0, cOffsetY = 0;
+	float cOffsetX = 0.0f;
+  float cOffsetY = 0.0f;
   
   private:
 };

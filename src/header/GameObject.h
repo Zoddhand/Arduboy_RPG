@@ -12,8 +12,8 @@ class GameObject {
   public:
 	struct Struct
 	{
-    	    float x = 16;
-    	    float y = 16;
+    	    float x = 128;
+    	    float y = 128 - 16;
     	    float velX = 0;
           float velY = 0;
           int speed = 1;
@@ -22,12 +22,12 @@ class GameObject {
 
 	GameObject();
 	void input();
-  void update(unsigned long );
+  void update(uint8_t );
   void draw(float, float);
   void animate();
   void Collide(float x, float y,float velx, float vely);
 
-  unsigned long deltaTime;
+  uint8_t deltaTime;
   const uint8_t *spr_frame;
   const uint8_t *mask_frame;
   uint8_t frame = 0;

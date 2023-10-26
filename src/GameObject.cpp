@@ -71,7 +71,7 @@ void GameObject::input()
       entity.velX = 0;
 }
 
-void GameObject::update(unsigned long dt)
+void GameObject::update(uint8_t dt)
 {
     deltaTime = dt;
     animate();
@@ -99,9 +99,7 @@ void GameObject::update(unsigned long dt)
 void GameObject::draw(float offX, float offY)
 {
   int fps = 1000 / deltaTime;
-  arduboy.println(Engine::checkCol(entity.x, entity.y));
   Sprites::drawExternalMask(entity.x - (offX * tileSize),entity.y - (offY * tileSize), spr_frame, mask_frame,frame, frame);
-  Sprites::drawExternalMask(16, 16,  Dialog, Dialog_mask, 1,1);
 }
 
 void GameObject::animate()
@@ -141,7 +139,7 @@ void GameObject::animate()
       }
       break;
   }
-
+  
   // Animate frame rate
   if (arduboy.everyXFrames(15))
   {
