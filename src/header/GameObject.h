@@ -14,6 +14,8 @@ class GameObject {
 	{
     	    float x = 160;
     	    float y = 0;
+          float scrX = 160;
+    	    float scrY = 0;
     	    float velX = 0;
           float velY = 0;
           uint8_t speed = 1;

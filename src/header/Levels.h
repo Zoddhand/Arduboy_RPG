@@ -1,10 +1,11 @@
 #pragma once
 #include "Engine.h"
 #include "GameObject.h"
+#include "Camera.h"
 
 static uint8_t curLevel = 1;
 // Define the maximum number of walkable tiles
-static const uint8_t maxWalkableTiles = 35; // You can adjust this based on the actual number of walkable tiles
+static const uint16_t maxWalkableTiles = 35; // You can adjust this based on the actual number of walkable tiles
 
 // Define the walkable tile indices
 static const uint16_t walkableTiles[maxWalkableTiles] = { // change this to int8_t after reducing tilesheet under 255 tiles
@@ -21,28 +22,46 @@ inline static bool isTileWalkable(uint16_t tileIndex) {
     return false;
 }
 
-inline static void changeLevel(uint8_t L, GameObject* p)
+inline static bool transition(GameObject* p)
 {
-  curLevel = L;
-  switch (curLevel)
+  if(curLevel == 1 && p->entity.y == 0)
+    if(p->entity.dir == UP)
+    {
+      curLevel = 2;
+      return true;
+    }  
+  if(curLevel == 2 && p->entity.y == 560)
+    if(p->entity.dir == DOWN)
+    {
+      curLevel = 1;
+      return true;
+    }  
+  return false;
+}
+
+inline static void changeLevel( GameObject* p, Camera &cam)
+{
+  if(transition(p))
   {
+    
+    switch (curLevel)
+    {
     case 1: 
-      mapSizeX = 20;
       mapSizeY = 18;
       p->entity.x = 160;
       p->entity.y = 0;
       break;
-  
-  case 2:
-    mapSizeX = 20;
-    mapSizeY = 36;
-    p->entity.x = 160;
-    p->entity.y = 560;
-    break;
+    
+    case 2:
+      mapSizeY = 36;
+      p->entity.x = 160;
+      p->entity.y = 560;
+      break;
+    }
   }
-  fullMapWidth = mapSizeX * tileSize;
   fullMapHeight = mapSizeY * tileSize;
 }
+
 static const uint16_t level1[18][20] PROGMEM =
 {
 {37,36,37,261,37,33,33,35,36,261,16,16,261,36,35,33,34,37,261,37},
@@ -105,14 +124,3 @@ static const uint16_t level2[36][20] PROGMEM =
 {1,1,1,246,1,1,1,1,1,261,16,16,261,1,1,1,1,1,246,1},
 {1,1,1,246,1,1,1,1,1,261,16,16,261,1,1,1,1,1,246,1}
 };
-
-static const uint16_t* getLevel(uint8_t level) {
-    switch (level) {
-        case 1:
-            return &level1[0][0];
-        case 2:
-            return &level2[0][0];
-        default:
-            return nullptr; // Handle invalid level number
-    }
-}

@@ -1,4 +1,5 @@
-#include <Arduboy2.h>
+#include <Arduboy2.h>       // required to build for Arduboy
+#include <ArduboyFX.h>      // required to access the FX external flash
 #include "src/header/Engine.h"
 
 unsigned long previousTime = 0;
@@ -25,4 +26,3 @@ void loop() {
   e.update(deltaTime);
   arduboy.display();
 }
-

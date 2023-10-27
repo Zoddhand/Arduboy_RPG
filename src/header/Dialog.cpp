@@ -5,34 +5,21 @@
 
 void Dialog::printDialog(const char* t)
 {
-  // this code formats and displays the dialog tiles to create the box
-  for (int k = 32, frame = 0; k < 64; k += 16)
-  {
-    for (int i = 0; i < 128; i += 16)
-    {
-      frame = (i == 0 && k == 32) ? 0 : 
-              (i == 0 && k == 48) ? 2 : 
-              (i == 112 && k == 32) ? 1 : 
-              (i == 112 && k == 48) ? 3 : 
-              (k == 32) ? 5 : 4;
-
-      SpritesB::drawPlusMask(i, k, Dialog_plus_mask, frame);
-    }
-  }
+  drawDialogBox();
 
   arduboy.setCursor(3, 35);
   arduboy.setTextWrap(false);
-  int lineLength = 20;
-  int textLength = strlen(t);
-  int currentPos = 0;
+  uint8_t lineLength = 20;
+  uint8_t textLength = strlen(t);
+  uint8_t currentPos = 0;
 
   while (currentPos < textLength)
   {
-    int lineStart = currentPos;
-    int lineEnd = min(currentPos + lineLength, textLength);
+    uint8_t lineStart = currentPos;
+    uint8_t lineEnd = min(currentPos + lineLength, textLength);
     int lastSpace = -1;
 
-    for (int i = lineEnd - 1; i >= lineStart; --i)
+    for (uint8_t i = lineEnd - 1; i >= lineStart; --i)
     {
       if (t[i] == ' ')
       {
@@ -43,7 +30,7 @@ void Dialog::printDialog(const char* t)
 
     lineEnd = (lastSpace != -1) ? lastSpace + 1 : lineEnd;
 
-    for (int i = lineStart; i < lineEnd; ++i)
+    for (uint8_t i = lineStart; i < lineEnd; ++i)
       arduboy.write(t[i]);
 
     arduboy.setCursor(3, arduboy.getCursorY() + 8);
@@ -63,14 +50,29 @@ void Dialog::toggle() {
   open = !open;
 }
 
-void Dialog::checkAndPrintDialog(GameObject& p, int x, int y, const char* text) {
-  if ((int)p.entity.x / tileSize == x && (int)p.entity.y / tileSize == y) {
+void Dialog::checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char* text) {
+  if(p.entity.dir == UP)
+    y = y;
+  else if(p.entity.dir == DOWN)
+    y = y + 1;
+
+  if ((int)(p.entity.x + 8) / tileSize == x && (int)(p.entity.y) / tileSize == y) { 
+    if (!buttonWasPressed && arduboy.pressed(A_BUTTON)) {
+      toggle();
+      buttonWasPressed = true;
+    }
+    else if (!arduboy.pressed(A_BUTTON)) {
+      buttonWasPressed = false;
+    }
+
+    if (open) {
       printDialog(text);
       p.entity.velX = 0;
       p.entity.velY = 0;
-    
+    }
   }
 }
+
 
 const char* Dialog::getMessage() const {
   return message;
