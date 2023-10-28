@@ -23,8 +23,10 @@ public:
   void setWasPressed(bool);
   void printDialog(const char* t);
   void togglePrintDialog(const char* text);
-
+  const bool hasPrinted();
+  void setPrinted(bool);
 private:
+  bool printed = false;
   const char* message;
   bool textPrinted;
   bool typeWriterEffect;  // Flag to control typewriter effect

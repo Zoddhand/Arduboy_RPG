@@ -47,7 +47,7 @@ void Engine::input() {
 void Engine::update(uint8_t dt) {
   deltaTime = dt;
   changeLevel(&p,cam);
-  //if(m.getTile(p.entity.x / tileSize ,p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)
+  if(m.getTile(p.entity.x / tileSize ,p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)
     b.getRandomEncounter();
   cam.update(p);
   p.update(deltaTime);
@@ -60,11 +60,12 @@ void Engine::draw() {
       p.draw(cam.cOffsetX, cam.cOffsetY);
     }
   b.draw();
-  arduboy.drawRect((p.entity.x + 4) - cam.cOffsetX * tileSize, (p.entity.y + 4) - cam.cOffsetY * tileSize , tileSize / 2, tileSize / 2, WHITE);
 }
 
 static bool Engine::checkCol(float x, float y)
 {
+    //  DRAWS PLAYER COL RECT */.
+    //arduboy.drawRect((p.entity.x + 4) - cam.cOffsetX * tileSize, (p.entity.y + 4) - cam.cOffsetY * tileSize , tileSize / 2, tileSize / 2, WHITE);
     const uint16_t colBoxSize = (tileSize / 2);
     const uint16_t colBoxOffset = colBoxSize / 2;
 

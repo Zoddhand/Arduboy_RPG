@@ -17,13 +17,14 @@ void loop() {
   if (!(arduboy.nextFrame()))
     return;
   arduboy.pollButtons();
-  
+
   //unsigned long currentTime = millis();
   uint8_t deltaTime = millis() - previousTime;
 	previousTime = millis();
   arduboy.clear();
-  e.draw();
+  
   e.input();
   e.update(deltaTime);
+  e.draw();
   arduboy.display();
 }

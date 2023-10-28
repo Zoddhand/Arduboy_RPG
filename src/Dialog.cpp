@@ -53,6 +53,7 @@ void Dialog::printDialog(const char* t) {
         arduboy.display();
       } else {
         arduboy.write(t[i]);
+        printed = true;
       }
     }
 
@@ -95,6 +96,7 @@ void Dialog::checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, co
 }
 
 void Dialog::togglePrintDialog(const char* text) {
+  /*
   if (arduboy.pressed(A_BUTTON) && !buttonWasPressed) {
     toggle();
     typeWriterEffect = true;
@@ -105,9 +107,7 @@ void Dialog::togglePrintDialog(const char* text) {
 
   if (open) {
     printDialog(text);
-  } else {
-    showRightMenu = true;
-  }
+  }*/
 }
 
 const bool Dialog::getOpen() {
@@ -125,3 +125,10 @@ const bool Dialog::getWasPressed() {
 void Dialog::setWasPressed(bool b) {
   buttonWasPressed = b;
 }
+
+ const bool Dialog::hasPrinted()
+ {
+    return printed;
+ }
+
+  void Dialog::setPrinted(bool b) { printed = b;}
