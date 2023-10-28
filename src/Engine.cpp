@@ -9,11 +9,12 @@ GameObject p;
 Map m;
 Camera cam;
 Dialog d;
-Battle b();
+Battle b;
 
 // GLOBALS
 uint8_t mapSizeY = 18;
 uint16_t fullMapHeight = mapSizeY * tileSize;
+bool showRightMenu = false;
 
 const char* dialogs[] = {
   "Milf Ketchum's Home... It's Unlocked.", // 0
@@ -27,30 +28,45 @@ Engine::Engine() {}
 void Engine::setup() {
   arduboy.begin();
   arduboy.setFrameRate(frameRate);
+  arduboy.initRandomSeed();
 }
 
 void Engine::input() {
-  arduboy.pollButtons();
-  if(!d.isOpen())
+  if(!d.getOpen() && !b.battle)
     p.input();
+  else{p.entity.velX = 0; p.entity.velY = 0;}
 
-  d.checkAndPrintDialog(p, m, 3, 44, dialogs[0]);
+  b.input();
+
+  d.checkAndPrintDialog(p, m, 3, 5, dialogs[0]);
   d.checkAndPrintDialog(p, m, 11, 5, dialogs[1]);
   d.checkAndPrintDialog(p, m, 7, 9, dialogs[2]);
   d.checkAndPrintDialog(p, m, 13, 13, dialogs[3]);
 }
 
 void Engine::update(uint8_t dt) {
+  if(arduboy.everyXFrames(60))
+    number = rand() % 8 + 1;
+   
+  //if (number == 4)
+    //b.endBattle();
+
+ 
   deltaTime = dt;
   changeLevel(&p,cam);
-  
+  //if(m.getTile(p.entity.x / tileSize ,p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)
+    b.getRandomEncounter();
   cam.update(p);
   p.update(deltaTime);
 }
 
 void Engine::draw() {
-  m.draw(cam,curLevel);
-  p.draw(cam.cOffsetX, cam.cOffsetY);
+    if(!b.getBattleState())
+    {
+      m.draw(cam,curLevel);
+      p.draw(cam.cOffsetX, cam.cOffsetY);
+    }
+  b.draw();
   arduboy.drawRect((p.entity.x + 4) - cam.cOffsetX * tileSize, (p.entity.y + 4) - cam.cOffsetY * tileSize , tileSize / 2, tileSize / 2, WHITE);
 }
 

@@ -11,19 +11,19 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "Tiled/Level1.tmx": {
-            "scale": 3,
+            "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 254.99999999999997,
-                "y": 144.33333333333331
+                "x": 291.5,
+                "y": 142.5
             }
         },
         "Tiled/Level2.tmx": {
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 254.99999999999997,
-                "y": 539
+                "x": 238.99999999999997,
+                "y": 81.66666666666666
             }
         },
         "Tiled/Tileset.tsx": {
@@ -52,8 +52,8 @@
     ],
     "project": "tiled-project.tiled-project",
     "recentFiles": [
-        "Tiled/Level1.tmx",
         "Tiled/Tileset_16x16.tsx",
+        "Tiled/Level1.tmx",
         "Tiled/Level2.tmx",
         "Tiled/Tileset.tsx"
     ],

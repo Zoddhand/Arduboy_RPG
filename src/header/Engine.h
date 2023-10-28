@@ -12,6 +12,7 @@ constexpr uint8_t mapSizeX = 20;
 constexpr uint16_t fullMapWidth = (mapSizeX * tileSize);
 constexpr uint8_t screenSizeX = 128;
 constexpr uint8_t screenSizeY = 64;
+extern bool showRightMenu; 
 
 
 static const uint8_t frameRate = 60;
@@ -27,4 +28,5 @@ class Engine {
     unsigned long deltaTime;
     static bool checkCol(float, float);
     private:
+      int number;
 };

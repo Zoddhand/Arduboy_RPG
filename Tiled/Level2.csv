@@ -1,308 +1,36 @@
-Heres my current code after implimenting the changes. when i change levels by pressing the a or b button the second level (not the starting level) is always corrupted.
-
-
-LEVELS.H
-
-#pragma once
-#include "Engine.h"
-#include "GameObject.h"
-
-static uint8_t curLevel = 1;
-// Define the maximum number of walkable tiles
-static const uint8_t maxWalkableTiles = 35; // You can adjust this based on the actual number of walkable tiles
-
-// Define the walkable tile indices
-static const uint16_t walkableTiles[maxWalkableTiles] = { // change this to int8_t after reducing tilesheet under 255 tiles
-    0, 3, 1, 16, 17, 18, 19, 20, 21, 33, 34, 35, 36, 37, 48, 49, 164, 165, 166, 180, 182, 196, 197, 198, 218, 219, 220, 221, 234, 237, 266, 267, 268, 344, 269, 
-};
-
-// Function to check if a tile index is walkable
-inline static bool isTileWalkable(uint16_t tileIndex) {
-    for (uint16_t i = 0; i < maxWalkableTiles; ++i) {
-        if (walkableTiles[i] == tileIndex) {
-            return true;
-        }
-    }
-    return false;
-}
-
-inline static void changeLevel(uint8_t L, GameObject* p)
-{
-  curLevel = L;
-  fullMapWidth = mapSizeX * tileSize;
-  fullMapHeight = mapSizeY * tileSize;
-  switch (curLevel)
-  {
-    case 1: 
-      mapSizeX = 20;
-      mapSizeY = 18;
-      p->entity.x = 160;
-      p->entity.y = 0;
-      break;
-  
-  case 2:
-    mapSizeX = 20;
-    mapSizeY = 36;
-    p->entity.x = 160;
-    p->entity.y = 560;
-    break;
-  }
-  
-}
-static const uint16_t level1[18][20] PROGMEM =
-{
-{37,36,37,261,37,33,33,35,36,261,16,16,261,36,35,33,34,37,261,37},
-{261,261,261,261,261,261,261,261,261,261,16,16,261,261,261,261,261,261,261,261},
-{261,33,164,165,165,165,165,165,165,165,1,1,165,165,165,165,165,166,35,261},
-{261,37,180,1,40,41,42,1,1,1,1,1,40,41,42,1,1,182,34,261},
-{261,37,180,1,56,57,58,1,1,1,1,1,56,57,58,22,23,182,36,261},
-{261,36,180,50,72,73,74,1,1,1,1,50,72,73,74,38,39,182,37,261},
-{261,37,180,1,1,1,1,1,1,1,1,1,1,1,1,1,1,182,36,261},
-{261,34,180,1,1,1,1,1,1,1,1,1,1,1,1,1,1,182,36,261},
-{261,35,180,1,1,1,1,1,1,1,40,41,41,41,41,42,180,182,33,261},
-{261,36,180,1,69,69,69,50,1,1,56,57,57,57,57,58,180,182,37,261},
-{261,33,180,1,21,21,21,21,1,1,343,339,66,67,270,341,180,182,37,261},
-{261,36,180,1,21,21,21,21,1,1,344,338,340,338,338,342,180,182,37,261},
-{261,33,180,1,1,1,1,1,1,1,1,1,1,1,1,1,1,182,36,261},
-{261,36,196,197,197,197,197,1,1,1,69,69,69,154,68,68,1,182,35,261},
-{261,34,36,36,13,14,15,180,1,1,21,21,21,21,21,21,1,182,36,261},
-{261,34,35,37,29,82,31,180,1,1,21,21,21,21,21,21,1,182,36,261},
-{261,35,37,34,29,83,31,196,197,197,197,197,197,197,197,197,197,198,37,261},
-{261,261,261,261,29,82,31,261,261,261,261,261,261,261,261,261,261,261,261,261},
-};
-
-static const uint16_t level2[36][20] PROGMEM =
-{
-{1,1,1,261,1,1,1,1,261,344,344,261,1,1,1,1,1,1,261,1},
-{1,1,1,261,261,261,261,261,261,344,344,261,261,261,261,261,261,261,261,1},
-{1,1,1,261,1,1,1,1,1,344,344,1,1,1,1,1,21,21,261,1},
-{1,1,1,261,1,1,1,1,246,344,344,1,1,1,1,1,21,21,261,1},
-{1,1,1,261,1,1,1,1,246,344,344,344,344,344,344,344,344,344,261,1},
-{1,1,1,261,64,65,66,67,246,64,65,66,67,344,344,344,344,344,261,1},
-{1,1,1,246,21,21,21,1,246,16,16,16,16,16,16,16,16,16,246,1},
-{1,1,1,246,1,1,1,1,246,16,16,16,16,16,16,16,16,16,246,1},
-{1,1,1,246,1,1,1,1,246,16,16,16,16,16,16,16,16,16,246,1},
-{1,1,1,246,64,65,66,67,246,16,16,16,16,16,16,16,16,16,246,1},
-{1,1,1,246,1,1,21,21,21,1,1,1,344,344,344,344,344,344,246,1},
-{1,1,1,246,1,1,1,1,1,1,1,1,344,344,344,344,344,344,246,1},
-{1,1,1,246,1,1,1,1,1,1,1,1,344,344,16,16,16,16,246,1},
-{1,1,1,246,246,246,64,65,66,67,246,246,246,246,16,16,16,16,246,1},
-{1,1,1,261,1,1,1,1,21,21,21,21,344,344,16,16,16,16,261,1},
-{1,1,1,261,1,1,1,1,21,21,21,21,344,344,16,16,16,16,261,1},
-{1,1,1,261,1,1,344,344,344,344,344,344,344,344,1,1,1,1,261,1},
-{1,1,1,261,1,1,344,344,344,344,344,344,344,344,1,1,1,1,261,1},
-{1,1,1,261,1,1,344,344,1,1,1,1,1,1,1,1,1,1,261,1},
-{1,1,1,261,64,3,66,67,3,65,66,67,66,67,64,65,66,67,261,1},
-{1,1,1,261,1,1,344,344,344,344,344,344,344,344,344,344,344,344,261,1},
-{1,1,1,261,1,1,344,344,344,344,344,344,344,344,344,344,344,344,261,1},
-{1,1,1,261,1,1,1,1,1,1,1,1,16,16,16,16,344,344,261,1},
-{1,1,1,261,246,246,246,246,246,246,246,246,16,16,16,16,64,65,261,1},
-{1,1,1,261,1,1,1,1,21,21,21,21,16,16,16,16,344,344,261,1},
-{1,1,1,261,1,1,1,1,21,21,21,21,16,16,16,16,344,344,261,1},
-{1,1,1,261,344,344,344,344,344,344,344,344,344,344,344,344,344,344,261,1},
-{1,1,1,261,64,65,344,344,344,50,64,65,66,67,64,65,66,67,261,1},
-{1,1,1,246,1,1,16,16,16,16,344,344,1,1,16,16,16,16,246,1},
-{1,1,1,246,1,1,16,16,16,16,344,344,1,1,16,16,16,16,246,1},
-{1,1,1,246,16,16,16,16,21,21,344,344,16,16,16,16,21,21,246,1},
-{1,1,1,246,16,16,16,16,21,21,344,344,16,16,16,16,21,21,246,1},
-{1,1,1,246,261,261,261,261,261,261,16,16,261,261,261,261,261,261,246,1},
-{1,1,1,246,1,1,1,1,1,261,16,16,261,1,1,1,1,1,246,1},
-{1,1,1,246,1,1,1,1,1,261,16,16,261,1,1,1,1,1,246,1},
-{1,1,1,246,1,1,1,1,1,261,16,16,261,1,1,1,1,1,246,1}
-};
-
-static const uint16_t* getLevel() {
-    switch (curLevel) {
-        case 1:
-            return &level1[0][0];
-        case 2:
-            return &level2[0][0];
-        default:
-            return nullptr; // Handle invalid level number
-    }
-}
-
-MAP.H
-
-#pragma once
-#include <Arduboy2.h>
-#include "Sprites.h"
-#include "Engine.h"
-#include "Camera.h"
-#include "Levels.h"
-
-// game idea, grass where you fight rpg battles that drop seeds or items to farm with.
-class Map {
-	
-  public:
-
-
-  Map();
-  void draw(Camera); // Pass the current level as a parameter
-  void update();
-  void setTile();
-  int getTile(int x, int y);
-  void loadMap();
-  private:
-};
-
-MAP.CPP
-
-#include "header/map.h"
-#include "header/Camera.h"
-
-
-
-Map::Map(){}
-
-void Map::draw(Camera c) {
-
-    const uint16_t* currentLevelArray = getLevel();
-
-    const uint8_t startRow = c.cOffsetY;
-    const int endRow = startRow + c.visibleTilesY + 1;
-    const int startCol = c.cOffsetX;
-    const int endCol = startCol + c.visibleTilesX + 1;
-
-    for (int i = startRow; i < endRow; ++i) {
-        for (int k = startCol; k < endCol; ++k) {
-          arduboy.println(i * 20 + k);
-            Sprites::drawOverwrite16((k - c.cOffsetX) * tileSize, (i - c.cOffsetY) * tileSize, Tileset, pgm_read_word(&(currentLevelArray[i * 20 + k])));
-        }
-    }
-}
-
-void Map::update()
-{
-
-}
-
-void Map::setTile()
-{
-
-}
-
-int Map::getTile(int x, int y) {
-    const uint16_t* currentLevelArray = getLevel();
-    if (currentLevelArray == nullptr) {
-        // Handle invalid level number
-        return -1;
-    }
-
-    return pgm_read_word(&(currentLevelArray[y * 20 + x]));
-}
-
-void Map::loadMap()
-{
-
-}
-
-ENGINE.H
-
-#pragma once
-#include <Arduboy2.h>
-
-static Arduboy2 arduboy;
-
-// Constants
-constexpr uint8_t tileSize = 16;
-static uint8_t mapSizeX = 20;
-static uint8_t mapSizeY = 36;
-static uint16_t fullMapWidth = mapSizeX * tileSize;
-static uint16_t fullMapHeight = mapSizeY * tileSize;
-constexpr uint8_t screenSizeX = 128;
-constexpr uint8_t screenSizeY = 64;
-
-static const uint8_t frameRate = 60;
-
-class Engine {
-  public:
-    Engine();
-    void input();
-    void update(uint8_t);
-    void draw();
-    void setup();
-    
-    unsigned long deltaTime;
-
-    static bool checkCol(float, float);
-    
-    private:
-};
-
-ENGINE.CPP
-
-#include "header/Engine.h"
-#include "header/GameObject.h"
-#include "header/Map.h"
-#include "header/Camera.h"
-#include "header/Dialog.h"
-
-GameObject p;
-Map m;
-Camera cam;
-Dialog d;
-
-const char* dialogs[] = {
-  "Milf Ketchum's Home... It's Unlocked.", // 0
-  "Gary's Hot Sisters Home.",
-  "Thank you for staying off the flowers.",
-  "Welcome to Pallet Town." // 3
-};
-
-Engine::Engine() {}
-
-void Engine::setup() {
-  arduboy.begin();
-  arduboy.setFrameRate(frameRate);
-}
-
-void Engine::input() {
-  arduboy.pollButtons();
-  if(arduboy.pressed(B_BUTTON))
-  {
-    changeLevel(1,&p);
-  }
-  if(arduboy.pressed(A_BUTTON))
-  {
-    changeLevel(2,&p);
-  }
-    d.checkAndPrintDialog(p, 2, 5, dialogs[0]);
-    d.checkAndPrintDialog(p, 1, 1, dialogs[1]);
-    d.checkAndPrintDialog(p, 2, 2, dialogs[2]);
-    d.checkAndPrintDialog(p, 3, 3, dialogs[3]);
-  p.input();
-}
-
-void Engine::update(uint8_t dt) {
-  if(curLevel == 0) changeLevel(1,&p);
-  deltaTime = dt;
-  p.update(deltaTime);
-  cam.update(p);
-}
-
-void Engine::draw() {
-  m.draw(cam);
-  p.draw(cam.cOffsetX, cam.cOffsetY);
-}
-
-// Old but possibly better code. change playerX to be - 8 at the start
-static bool Engine::checkCol(float x, float y)
-{
-    const uint8_t colBoxSize = (tileSize / 2);
-    const uint8_t colBoxOffset = colBoxSize / 2;
-
-    // Convert player coordinates to map coordinates for the top-left corner
-    uint8_t mapX1 = (x + colBoxOffset) / tileSize;
-    uint8_t mapY1 = (y + colBoxOffset) / tileSize;
-
-    // Convert player coordinates to map coordinates for the bottom-right corner
-    uint8_t mapX2 = (x + colBoxSize - colBoxOffset) / tileSize + .5;
-    uint8_t mapY2 = (y + colBoxSize - colBoxOffset) / tileSize + .5;
-
-    // Check collision for both corners of the player
-    bool collisionX = !isTileWalkable(m.getTile(mapX1, mapY1)) || !isTileWalkable(m.getTile(mapX2, mapY1)) || !isTileWalkable(m.getTile(mapX1, mapY2)) || !isTileWalkable(m.getTile(mapX2, mapY2));
-    bool collisionY = !isTileWalkable(m.getTile(mapX1, mapY1)) || !isTileWalkable(m.getTile(mapX2, mapY1)) || !isTileWalkable(m.getTile(mapX1, mapY2)) || !isTileWalkable(m.getTile(mapX2, mapY2));
-
-    return collisionX || collisionY;
-}
+1,1,1,36,1,1,1,1,36,38,38,36,1,1,1,1,1,1,36,1
+1,1,1,36,36,36,36,36,36,38,38,36,36,36,36,36,36,36,36,1
+1,1,1,36,1,1,1,1,1,38,38,1,1,1,1,1,19,19,36,1
+1,1,1,36,1,1,1,1,8,38,38,1,1,1,1,1,19,19,36,1
+1,1,1,36,1,1,1,1,8,38,38,38,38,38,38,38,38,38,36,1
+1,1,1,36,56,56,57,58,8,56,56,57,58,38,38,38,38,38,36,1
+1,1,1,8,19,19,19,1,8,37,37,37,37,37,37,37,37,37,8,1
+1,1,1,8,1,1,1,1,8,37,37,37,37,37,37,37,37,37,8,1
+1,1,1,8,1,1,1,1,8,37,37,37,37,37,37,37,37,37,8,1
+1,1,1,8,56,57,58,58,8,37,37,37,37,37,37,37,37,37,8,1
+1,1,1,8,1,1,19,19,19,1,1,1,38,38,38,38,38,38,8,1
+1,1,1,8,1,1,1,1,1,1,1,1,38,38,38,38,38,38,8,1
+1,1,1,8,1,1,1,1,1,1,1,1,38,38,37,37,37,37,8,1
+1,1,1,8,8,8,56,56,57,58,8,8,8,8,37,37,37,37,8,1
+1,1,1,36,1,1,1,1,19,19,19,19,38,38,37,37,37,37,36,1
+1,1,1,36,1,1,1,1,19,19,19,19,38,38,37,37,37,37,36,1
+1,1,1,36,1,1,38,38,38,38,38,38,38,38,1,1,1,1,36,1
+1,1,1,36,1,1,38,38,38,38,38,38,38,38,1,1,1,1,36,1
+1,1,1,36,1,1,38,38,1,1,1,1,1,1,1,1,1,1,36,1
+1,1,1,36,57,5,57,58,5,56,57,58,57,56,57,58,57,58,36,1
+1,1,1,36,1,1,38,38,38,38,38,38,38,38,38,38,38,38,36,1
+1,1,1,36,1,1,38,38,38,38,38,38,38,38,38,38,38,38,36,1
+1,1,1,36,1,1,1,1,1,1,1,1,37,37,37,37,38,38,36,1
+1,1,1,36,8,8,8,8,8,8,8,8,37,37,37,37,57,58,36,1
+1,1,1,36,1,1,1,1,19,19,19,19,37,37,37,37,38,38,36,1
+1,1,1,36,1,1,1,1,19,19,19,19,37,37,37,37,38,38,36,1
+1,1,1,36,38,38,38,38,38,38,38,38,38,38,38,38,38,38,36,1
+1,1,1,36,57,58,38,38,38,44,56,57,58,56,57,56,57,58,36,1
+1,1,1,8,1,1,37,37,37,37,38,38,1,1,37,37,37,37,8,1
+1,1,1,8,1,1,37,37,37,37,38,38,1,1,37,37,37,37,8,1
+1,1,1,8,37,37,37,37,19,19,38,38,37,37,37,37,19,19,8,1
+1,1,1,8,37,37,37,37,19,19,38,38,37,37,37,37,19,19,8,1
+1,1,1,8,36,36,36,36,36,36,37,37,36,36,36,36,36,36,8,1
+1,1,1,8,1,1,1,1,1,36,37,37,36,1,1,1,1,1,8,1
+1,1,1,8,1,1,1,1,1,36,37,37,36,1,1,1,1,1,8,1
+1,1,1,8,1,1,1,1,1,36,37,37,36,1,1,1,1,1,8,1

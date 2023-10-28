@@ -2,6 +2,8 @@
 #include "engine.h"
 #include "Dialog.h"
 
+
+
 class Battle
 {
 
@@ -15,6 +17,14 @@ class Battle
   void endTurn();
   void update();
   void draw();
+  bool getBattleState(){ return battle; }
+  void endBattle();
+  void input();
+  uint8_t arrowLoc = 0;
+  void menuSelect();
+  bool battle = false;
   private:
     Dialog d;
+    uint8_t* number;
+    uint8_t randEnemy;   
 };

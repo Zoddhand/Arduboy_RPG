@@ -14,9 +14,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(!arduboy.nextFrame())
-		return;
-
+  if (!(arduboy.nextFrame()))
+    return;
+  arduboy.pollButtons();
+  
   //unsigned long currentTime = millis();
   uint8_t deltaTime = millis() - previousTime;
 	previousTime = millis();
