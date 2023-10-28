@@ -14,7 +14,7 @@ Battle b;
 // GLOBALS
 uint8_t mapSizeY = 18;
 uint16_t fullMapHeight = mapSizeY * tileSize;
-bool showRightMenu = false;
+bool showRightMenu;
 
 const char* dialogs[] = {
   "Milf Ketchum's Home... It's Unlocked.", // 0
@@ -32,7 +32,7 @@ void Engine::setup() {
 }
 
 void Engine::input() {
-  if(!d.getOpen() && !b.battle)
+  if(!d.getOpen() && !b.getBattleState())
     p.input();
   else{p.entity.velX = 0; p.entity.velY = 0;}
 
@@ -45,13 +45,6 @@ void Engine::input() {
 }
 
 void Engine::update(uint8_t dt) {
-  if(arduboy.everyXFrames(60))
-    number = rand() % 8 + 1;
-   
-  //if (number == 4)
-    //b.endBattle();
-
- 
   deltaTime = dt;
   changeLevel(&p,cam);
   //if(m.getTile(p.entity.x / tileSize ,p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)

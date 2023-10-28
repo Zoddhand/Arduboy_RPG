@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Tiled/Level2.tmx",
+    "activeFile": "Tiled/Level1.tmx",
     "expandedProjectPaths": [
-        "Tiled",
-        "."
+        ".",
+        "Tiled"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -33,7 +33,7 @@
         },
         "Tiled/Tileset_16x16.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 2.2,
+            "scaleInDock": 3,
             "scaleInEditor": 4
         }
     },
@@ -53,8 +53,8 @@
     "project": "tiled-project.tiled-project",
     "recentFiles": [
         "Tiled/Tileset_16x16.tsx",
-        "Tiled/Level1.tmx",
         "Tiled/Level2.tmx",
+        "Tiled/Level1.tmx",
         "Tiled/Tileset.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

@@ -28,5 +28,4 @@ class Engine {
     unsigned long deltaTime;
     static bool checkCol(float, float);
     private:
-      int number;
 };
