@@ -64,6 +64,7 @@ void Engine::draw() {
   if(b.getBattleState())
     b.draw(); // draw battle
   d.draw(); // draw dialog
+  arduboy.print(b.getBattleState());
 }
 
 static bool Engine::checkCol(float x, float y)

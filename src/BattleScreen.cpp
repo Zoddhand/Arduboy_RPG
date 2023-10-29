@@ -63,26 +63,23 @@ void Battle::menuSelect() {
     {
       d.printDialog("You ran away...         ");
         if(!d.getOpen())
-          ranAway = true;
+          endBattle();
     } 
   }
 }
 
 void Battle::startBattle() {
-  battle = true;
   showRightMenu = true;
 }
 
 void Battle::endBattle() {
   battle = false;
   mon[0].x = 128;
+  showRightMenu = false;
 }
 
 void Battle::update() 
 {
-  if(ranAway)
-    endBattle();
-
   monsterTransition();
   if(!d.getOpen())
     showRightMenu = true;
@@ -90,7 +87,7 @@ void Battle::update()
 
 void Battle::draw()
  {
-    //d.drawDialogBox();
+    d.drawDialogBox();
     Sprites::drawOverwrite(mon[0].x, 0, Enemies, randEnemy);
 
     if (showRightMenu) 
