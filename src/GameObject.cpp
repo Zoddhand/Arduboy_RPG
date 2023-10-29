@@ -9,7 +9,6 @@ GameObject::GameObject()
 
 void GameObject::input()
 {
-    arduboy.pollButtons();
 
     // Reset velocities
     entity.velX = 0;

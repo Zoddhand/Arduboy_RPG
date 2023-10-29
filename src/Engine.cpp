@@ -9,12 +9,11 @@ GameObject p;
 Map m;
 Camera cam;
 Dialog d;
-Battle b;
+Battle b(d);
 
 // GLOBALS
 uint8_t mapSizeY = 18;
 uint16_t fullMapHeight = mapSizeY * tileSize;
-bool showRightMenu;
 
 const char* dialogs[] = {
   "Milf Ketchum's Home... It's Unlocked.", // 0
@@ -32,16 +31,15 @@ void Engine::setup() {
 }
 
 void Engine::input() {
+  arduboy.pollButtons();
   if(!d.getOpen() && !b.getBattleState())
     p.input();
   else{p.entity.velX = 0; p.entity.velY = 0;}
 
-  b.input();
+  if(b.getBattleState())
+    b.input();
 
-  d.checkAndPrintDialog(p, m, 3, 5, dialogs[0]);
-  d.checkAndPrintDialog(p, m, 11, 5, dialogs[1]);
-  d.checkAndPrintDialog(p, m, 7, 9, dialogs[2]);
-  d.checkAndPrintDialog(p, m, 13, 13, dialogs[3]);
+  checkSigns();
 }
 
 void Engine::update(uint8_t dt) {
@@ -51,20 +49,26 @@ void Engine::update(uint8_t dt) {
     b.getRandomEncounter();
   cam.update(p);
   p.update(deltaTime);
+  if(b.getBattleState())
+    b.update();
 }
 
 void Engine::draw() {
     if(!b.getBattleState())
     {
-      m.draw(cam,curLevel);
-      p.draw(cam.cOffsetX, cam.cOffsetY);
+      m.draw(cam,curLevel); // draw map
+      p.draw(cam.cOffsetX, cam.cOffsetY); // draw player
     }
-  b.draw();
+    arduboy.print(d.getOpen());
+    
+  if(b.getBattleState())
+    b.draw(); // draw battle
+  d.draw(); // draw dialog
 }
 
 static bool Engine::checkCol(float x, float y)
 {
-    //  DRAWS PLAYER COL RECT */.
+    //Draw col rect
     //arduboy.drawRect((p.entity.x + 4) - cam.cOffsetX * tileSize, (p.entity.y + 4) - cam.cOffsetY * tileSize , tileSize / 2, tileSize / 2, WHITE);
     const uint16_t colBoxSize = (tileSize / 2);
     const uint16_t colBoxOffset = colBoxSize / 2;
@@ -84,6 +88,16 @@ static bool Engine::checkCol(float x, float y)
     return collisionX || collisionY;
 }
 
+void Engine::checkSigns()
+{
+  if(arduboy.justPressed(A_BUTTON))
+  {
+    d.checkAndPrintDialog(p, m, 3, 5, dialogs[0]);
+    d.checkAndPrintDialog(p, m, 11, 5, dialogs[1]);
+    d.checkAndPrintDialog(p, m, 7, 9, dialogs[2]);
+    d.checkAndPrintDialog(p, m, 13, 13, dialogs[3]);
+  }
+}
 
 
 

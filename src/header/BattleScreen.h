@@ -5,7 +5,7 @@
 
 class Battle {
 public:
-  Battle();
+  Battle(Dialog&);
 
   void startBattle();
   void getRandomEncounter();
@@ -13,8 +13,8 @@ public:
   void input();
   void update();
   void draw();
-  
-  bool getBattleState() const { return battle; }
+
+  bool getBattleState();
 
 private:
   Dialog d;
@@ -23,12 +23,10 @@ private:
   bool battle;
   uint8_t arrowLoc;
   void flashScreen();
-  void monsterTransition();
   void menuSelect();
-  bool pressed = false;
-  bool lowerHp();
+  void monsterTransition();
 
-  struct Monster
+    struct Monster
   {
     uint8_t x,y;
     float hp;
@@ -38,15 +36,7 @@ private:
     uint8_t special;
     const char* moves[4];
   }mon[28];
-
-  uint8_t textIndex = 0;
-  const char* text[4] = {
-  "Your attack did ", // 0
-  mon[0].attack,
-  "You have no Items.",
-  "Attempting to run away." // 3
+  bool ranAway = false;
+  bool showRightMenu;
+  void rightMenu();
 };
-
-};
-
-static inline uint8_t calDamage(int att, int def) { uint8_t dmg = att - def;}

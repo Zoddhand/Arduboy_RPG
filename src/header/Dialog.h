@@ -13,21 +13,16 @@ public:
   Dialog();
 
   void drawDialogBox();
+  void printDialog(const char* t);
+  void checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char*);
+  const bool getOpen();
+  void draw();
+
+private:
+  void setText(const char* text);
   void print();
   void toggle();
-  void checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char*);
-  const char* getMessage();
-  const bool getOpen();  // Changed the getter to const
-  void setOpen(bool);
-  const bool getWasPressed();  // Changed the getter to const
-  void setWasPressed(bool);
-  void printDialog(const char* t);
-  void togglePrintDialog(const char* text);
-  const bool hasPrinted();
-  void setPrinted(bool);
-private:
-  bool printed = false;
-  const char* message;
-  bool textPrinted;
+
   bool typeWriterEffect;  // Flag to control typewriter effect
+  const char* textToPrint;
 };
