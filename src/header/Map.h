@@ -14,6 +14,6 @@ class Map {
     int getTile(int x, int y);
     private:
       uint8_t currentLevel;
-      const uint16_t* getLevel(uint8_t);
-      const uint16_t* currentLevelArray = nullptr;
+      const uint8_t* getLevel(uint8_t);
+    const uint8_t* currentLevelArray = nullptr;
 };

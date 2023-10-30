@@ -56,9 +56,9 @@ void GameObject::input()
         entity.x = fullMapWidth - tileSize;
     }
 
-    if (entity.y < 0)
+    if (entity.y == -1)
     {
-        entity.y = 0;
+        entity.y = -1;
     }
     else if (entity.y > fullMapHeight - tileSize)
     {
@@ -70,8 +70,7 @@ void GameObject::input()
       entity.velX = 0;
 }
 
-void GameObject::update(uint8_t dt)
-{
+void GameObject::update(uint8_t dt) {
     deltaTime = dt;
     animate();
 
@@ -80,17 +79,11 @@ void GameObject::update(uint8_t dt)
     float newY = entity.y + entity.velY;
 
     // Check for collisions before updating the position
-    bool collisionX = Engine::checkCol(newX, entity.y);
-    bool collisionY = Engine::checkCol(entity.x, newY);
-
-    // Update the position only if there is no collision
-    if (!collisionX)
-    {
+    if (!Engine::checkCol(newX, entity.y)) {
         entity.x = newX;
     }
 
-    if (!collisionY)
-    {
+    if (!Engine::checkCol(entity.x, newY)) {
         entity.y = newY;
     }
 }

@@ -13,66 +13,69 @@ Battle b(d);
 
 // GLOBALS
 uint8_t mapSizeY = 18;
-uint16_t fullMapHeight = mapSizeY * tileSize;
+uint8_t mapSizeX = 20;
+uint16_t fullMapHeight = (mapSizeY * tileSize);
+uint16_t fullMapWidth = (mapSizeX * tileSize);
 
 const char* dialogs[] = {
   "Milf Ketchum's Home... It's Unlocked.", // 0
-  "Gary's Hot Sisters Home.",
-  "Thank you for staying off the flowers.",
-  "Welcome to Pallet Town." // 3
+  "Gary's Hot Sisters Home.", // 1
+  "Thank you for staying off the flowers.", // 2
+  "Welcome to Pallet Town.", // 3
+  "This is supposed to be a TV." // 4 
 };
 
 Engine::Engine() {}
 
 void Engine::setup() {
-  arduboy.begin();
-  arduboy.setFrameRate(frameRate);
-  arduboy.initRandomSeed();
+    arduboy.begin();
+    arduboy.setFrameRate(frameRate);
+    arduboy.initRandomSeed();
 }
 
 void Engine::input() {
-  arduboy.pollButtons();
-  if(!d.getOpen() && !b.getBattleState())
-    p.input();
-  else{p.entity.velX = 0; p.entity.velY = 0;}
+    arduboy.pollButtons();
+    if (!d.getOpen() && !b.getBattleState())
+        p.input();
+    else { p.entity.velX = 0; p.entity.velY = 0; }
 
-  if(b.getBattleState())
-    b.input();
+    if (b.getBattleState())
+        b.input();
 
-  checkSigns();
+    checkSigns();
 }
 
 void Engine::update(uint8_t dt) {
-  deltaTime = dt;
-  changeLevel(&p,cam);
-  if(m.getTile(p.entity.x / tileSize ,p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)
-    b.getRandomEncounter();
-  cam.update(p);
-  p.update(deltaTime);
-  if(b.getBattleState())
-    b.update();
+    deltaTime = dt;
+    if (m.getTile(p.entity.x / tileSize, p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)
+        b.getRandomEncounter();
+    cam.update(p);
+    d.update(curLevel);
+    p.update(deltaTime);
+    if (b.getBattleState())
+        b.update();
 }
 
 void Engine::draw() {
-    if(!b.getBattleState())
-    {
-      m.draw(cam,curLevel); // draw map
-      p.draw(cam.cOffsetX, cam.cOffsetY); // draw player
+    if (!b.getBattleState()) {
+        m.draw(cam, curLevel);
+        p.draw(cam.cOffsetX, cam.cOffsetY);
+        changeLevel(&p);
     }
-    arduboy.print(d.getOpen());
-    
-  if(b.getBattleState())
-    b.draw(); // draw battle
-  d.draw(); // draw dialog
-  arduboy.print(b.getBattleState());
+    if (b.getBattleState())
+        b.draw();
+    else
+        d.draw();
 }
 
 static bool Engine::checkCol(float x, float y)
 {
+    p.entity.center.x = (p.entity.x + tileSize / 2);
+    p.entity.center.y = (p.entity.y + tileSize / 2);
     //Draw col rect
     //arduboy.drawRect((p.entity.x + 4) - cam.cOffsetX * tileSize, (p.entity.y + 4) - cam.cOffsetY * tileSize , tileSize / 2, tileSize / 2, WHITE);
-    const uint16_t colBoxSize = (tileSize / 2);
-    const uint16_t colBoxOffset = colBoxSize / 2;
+    const uint8_t colBoxSize = (tileSize / 2);
+    const uint8_t colBoxOffset = colBoxSize / 2;
 
     // Convert player coordinates to map coordinates for the top-left corner
     uint16_t mapX1 = (x + colBoxOffset) / tileSize;
@@ -93,15 +96,26 @@ void Engine::checkSigns()
 {
   if(arduboy.justPressed(A_BUTTON))
   {
-    d.checkAndPrintDialog(p, m, 3, 5, dialogs[0]);
-    d.checkAndPrintDialog(p, m, 11, 5, dialogs[1]);
-    d.checkAndPrintDialog(p, m, 7, 9, dialogs[2]);
-    d.checkAndPrintDialog(p, m, 13, 13, dialogs[3]);
+    d.checkAndPrintDialog(p, m, 3, 5, dialogs[0],LEVEL1);
+    d.checkAndPrintDialog(p, m, 11, 5, dialogs[1],LEVEL1);
+    d.checkAndPrintDialog(p, m, 7, 9, dialogs[2],LEVEL1);
+    d.checkAndPrintDialog(p, m, 13, 13, dialogs[3],LEVEL1);
+    d.checkAndPrintDialog(p, m, 3, 1, dialogs[4],REDS_HOUSE_F2);
+    d.checkAndPrintDialog(p, m, 4, 1, dialogs[4],REDS_HOUSE_F2);
   }
 }
 
+static bool Engine::checkTile(const Point& point, uint8_t tileNumber)
+{
+    uint8_t mapX = point.x / tileSize;
+    uint8_t mapY = point.y / tileSize;
 
+    // Use the getTile function to get the tile number at the specified point
+    uint8_t currentTile = m.getTile(mapX, mapY);
 
+    // Check if the tile at the specified point equals the given tile number
+    return (currentTile == tileNumber);
+}
 
 
 

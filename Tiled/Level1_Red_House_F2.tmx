@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="Level1_Red_House_F2.csv" format="csv"/>
+ </editorsettings>
+ <tileset firstgid="1" source="Tileset_16x16.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="8" height="8">
+  <data encoding="csv">
+125,125,125,125,125,125,125,125,
+2,2,2,46,47,2,2,2,
+2,2,2,2,2,2,66,2,
+2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,
+11,2,2,2,2,2,2,2,
+25,23,2,2,2,2,2,2
+</data>
+ </layer>
+</map>

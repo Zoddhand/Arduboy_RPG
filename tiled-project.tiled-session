@@ -14,16 +14,32 @@
             "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 291.5,
-                "y": 142.5
+                "x": 170.5,
+                "y": 158.75
+            }
+        },
+        "Tiled/Level1_Red_House.tmx": {
+            "scale": 4,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 54.5,
+                "y": 59.125
+            }
+        },
+        "Tiled/Level1_Red_House_F2.tmx": {
+            "scale": 4,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 67.75,
+                "y": 51.375
             }
         },
         "Tiled/Level2.tmx": {
-            "scale": 3,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 238.99999999999997,
-                "y": 81.66666666666666
+                "x": 211.33333333333334,
+                "y": 289
             }
         },
         "Tiled/Tileset.tsx": {
@@ -39,12 +55,12 @@
     },
     "last.exportedFilePath": "C:/Dev/Arduino/Arduboy/Arduboy_RPG/Tiled",
     "last.imagePath": "C:/Dev/Arduino/Arduboy/Arduboy_RPG/assets/TILES",
-    "map.height": 32,
+    "map.height": 8,
     "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 20,
+    "map.width": 8,
     "openFiles": [
         "Tiled/Level1.tmx",
         "Tiled/Level2.tmx",
@@ -52,9 +68,10 @@
     ],
     "project": "tiled-project.tiled-project",
     "recentFiles": [
-        "Tiled/Tileset_16x16.tsx",
+        "Tiled/Level1_Red_House.tmx",
         "Tiled/Level2.tmx",
         "Tiled/Level1.tmx",
+        "Tiled/Tileset_16x16.tsx",
         "Tiled/Tileset.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

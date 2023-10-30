@@ -1,0 +1,54 @@
+struct Warp {
+    uint8_t x;
+    uint8_t y;
+    uint8_t warpTo;
+    uint8_t px;
+    uint8_t py;
+};
+
+struct Levels {
+    int id;
+    int mapSizeX;
+    int mapSizeY;
+    Warp warps[3];
+    int numWarps;
+};
+
+static Levels levels[] = {
+    {0, 0, 0, {}, 0}, // LEVEL 0
+    {1, 20, 18, {{5, 5, REDS_HOUSE_F1, 16, 16},{10, 0, 1, 10*16, 35*16},{11, 0, 1, 11*16, 35*16}}, 3}, // LEVEL 1
+    // Define more levels as needed
+};
+
+inline static bool transition(GameObject* p)
+{
+  uint8_t pTileX = p->entity.x / tileSize;
+  uint8_t pTileY = p->entity.y / tileSize;
+  
+    for(uint8_t l = 0; l < 2; l ++)
+    {
+      if(curLevel == levels[l].id)
+      {
+        for(uint8_t w = 0; w < levels[l].numWarps; w ++)
+        {
+          if(pTileX == levels[l].warps[w].x && pTileY == levels[l].warps[w].x)
+          {
+            curLevel = levels[l].warps[w].warpTo;
+            p->entity.x = levels[l].warps[w].px;
+            p->entity.y = levels[l].warps[w].py;
+            mapSizeX = levels[l].mapSizeX;
+            mapSizeY = levels[l].mapSizeY;
+            return true;
+          }
+        }
+      }
+    }
+  return false;
+}
+
+inline static void changeLevel( GameObject* p)
+{
+  transition(p);
+  fullMapHeight = mapSizeY * tileSize;
+  fullMapWidth = mapSizeX * tileSize;
+}

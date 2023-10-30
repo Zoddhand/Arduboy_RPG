@@ -1,20 +1,30 @@
+//LEVEL.H
 #pragma once
 #include "Engine.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "Map.h"
 
-static uint8_t curLevel = 1;
+#define ANY 255
+#define REDS_HOUSE_F1  200
+#define REDS_HOUSE_F2  201
+#define LEVEL1  1
+#define LEVEL2  2
+#define LEVEL3  3
+
+class Map;
+
 // Define the maximum number of walkable tiles
-static const uint16_t maxWalkableTiles = 35; // You can adjust this based on the actual number of walkable tiles
+static const uint8_t maxWalkableTiles = 40;
 
 // Define the walkable tile indices
-static const uint16_t walkableTiles[maxWalkableTiles] = { // change this to int8_t after reducing tilesheet under 255 tiles
-    37, 38, 1, 0, 5, 29, 30 ,31 ,32 ,33, 14 ,15 ,16 ,17 ,18 ,19,42,43,84,85,86,98,99,100,112,113,114
+static const uint8_t walkableTiles[maxWalkableTiles] = {
+    123,2,3,4,37, 65, 38, 1, 0, 5, 29, 30, 31, 32, 33, 14, 15, 16, 17, 18, 19, 42, 43, 84, 85, 86, 98, 99, 100, 112, 113, 114
 };
 
 // Function to check if a tile index is walkable
-inline static bool isTileWalkable(uint16_t tileIndex) {
-    for (uint16_t i = 0; i < maxWalkableTiles; ++i) {
+inline static bool isTileWalkable(uint8_t tileIndex) {
+    for (uint8_t i = 0; i < maxWalkableTiles; ++i) {
         if (walkableTiles[i] == tileIndex) {
             return true;
         }
@@ -22,47 +32,81 @@ inline static bool isTileWalkable(uint16_t tileIndex) {
     return false;
 }
 
-inline static bool transition(GameObject* p)
-{
-  if(curLevel == 1 && p->entity.y == 0)
-    if(p->entity.dir == UP)
-    {
-      curLevel = 2;
-      return true;
-    }  
-  if(curLevel == 2 && p->entity.y == 560)
-    if(p->entity.dir == DOWN)
-    {
-      curLevel = 1;
-      return true;
-    }  
+struct Warp {
+    uint8_t x;
+    uint8_t y;
+    uint8_t warpTo;
+    uint8_t px;
+    uint8_t py;
+    uint8_t dir;
+};
+
+struct Levels {
+    uint8_t id;
+    uint8_t mapSizeX;
+    uint8_t mapSizeY;
+    Warp warps[4];
+    uint8_t numWarps;
+};
+
+static Levels levels[] = {
+    {0, 20, 18, {}, 0}, // LEVEL 0
+    {LEVEL1, 20, 18, {{5, 5, REDS_HOUSE_F1, 2, 7,UP},{13, 5, REDS_HOUSE_F1, 2, 7,UP},{10, -1, LEVEL2, 10, 35,UP},{11, -1, LEVEL2, 11, 35,UP}}, 4}, // LEVEL 1
+    {LEVEL2, 20, 36, {{10, 35, LEVEL1, 10, 0,DOWN},{11, 35, LEVEL1, 11, 0,DOWN},{9, 0, LEVEL3, 16, 16,UP}}, 3}, // LEVEL 2
+    {LEVEL3, 20, 36, {{10, 35, LEVEL1, 10, 0,DOWN},{11, 35, LEVEL1, 11, 0,DOWN},{9, 0, LEVEL3, 16, 16,UP}}, 3}, // LEVEL 3
+    {REDS_HOUSE_F1, 8, 8, {{2, 7, LEVEL1, 5, 6,DOWN},{6, 2, REDS_HOUSE_F2, 1,3,ANY}}, 3}, // LEVEL REDS_HOUSE_F1
+    {REDS_HOUSE_F2, 8, 8, {{1, 2, REDS_HOUSE_F1, 6, 3, ANY}}, 1}, // LEVEL REDS_HOUSE_F2
+    // Define more levels as needed
+};
+
+inline static bool transition(GameObject* p) {
+  uint8_t pTileX = (p->entity.center.x)  / tileSize;
+  uint8_t pTileY = (p->entity.center.y) / tileSize;
+  arduboy.println(pTileX);
+  arduboy.println(pTileY);
+
+  for (uint8_t l = 0; l < numLevels; l++) {
+    if (curLevel == levels[l].id) {
+      for (uint8_t w = 0; w < levels[l].numWarps; w++) {
+        if (pTileX == levels[l].warps[w].x && pTileY == levels[l].warps[w].y) {
+          if( p->entity.dir == levels[l].warps[w].dir || levels[l].warps[w].dir == ANY )
+          {
+            curLevel = levels[l].warps[w].warpTo;
+            p->entity.x = levels[l].warps[w].px * tileSize;
+            p->entity.y = levels[l].warps[w].py * tileSize;
+
+            // Find the index of the current level based on its id
+            for (uint8_t i = 0; i < numLevels; i++) {
+              if (curLevel == levels[i].id) {
+                // Update mapSizeX and mapSizeY based on the found index
+                mapSizeX = levels[i].mapSizeX;
+                mapSizeY = levels[i].mapSizeY;
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   return false;
 }
 
-inline static void changeLevel( GameObject* p, Camera &cam)
+inline static void changeLevel( GameObject* p)
 {
   if(transition(p))
-  {
-    
-    switch (curLevel)
+    for(uint8_t l = 1; l < numLevels; l ++)
     {
-    case 1: 
-      mapSizeY = 18;
-      p->entity.x = 160;
-      p->entity.y = 0;
-      break;
-    
-    case 2:
-      mapSizeY = 36;
-      p->entity.x = 160;
-      p->entity.y = 560;
-      break;
+      if(curLevel == l)
+      {
+        Engine::changeMapSize(levels[l].mapSizeX, levels[l].mapSizeY);
+      }
     }
-  }
   fullMapHeight = mapSizeY * tileSize;
+  fullMapWidth = mapSizeX * tileSize;
 }
 
-static const uint16_t level1[18][20] PROGMEM =
+static const uint8_t level1[18][20] PROGMEM =
 {
 {30,33,32,36,31,33,31,33,30,36,37,37,36,29,33,29,33,30,36,31},
 {36,36,36,36,36,36,36,36,36,36,37,37,36,36,36,36,36,36,36,36},
@@ -84,7 +128,29 @@ static const uint16_t level1[18][20] PROGMEM =
 {36,36,36,36,101,71,103,36,36,36,36,36,36,36,36,36,36,36,36,36},
 };
 
-static const uint16_t level2[36][20] PROGMEM =
+static const uint8_t level3[18][20] PROGMEM =
+{
+{30,33,32,36,31,33,31,33,30,36,37,37,36,29,33,29,33,30,36,31},
+{36,36,36,36,36,36,36,36,36,36,37,37,36,36,36,36,36,36,36,36},
+{36,30,84,85,85,85,85,85,85,85,0,0,85,85,85,85,85,86,33,36},
+{36,32,98,0,94,95,96,0,0,0,0,0,94,95,96,0,0,100,29,36},
+{36,29,98,0,108,109,110,0,0,0,0,0,108,109,110,20,21,100,31,36},
+{36,32,98,44,122,123,125,0,0,0,0,44,122,123,125,34,35,100,29,36},
+{36,30,98,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,29,36},
+{36,33,98,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,32,36},
+{36,18,98,0,0,0,0,0,0,0,94,95,95,95,95,96,0,100,30,36},
+{36,32,98,0,59,59,59,44,0,0,108,109,109,109,109,110,0,100,29,36},
+{36,31,98,0,42,43,42,43,0,0,97,111,57,57,57,83,0,100,30,36},
+{36,33,98,0,42,43,42,43,0,0,122,124,123,124,124,125,0,100,30,36},
+{36,30,98,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,32,36},
+{36,18,112,113,113,113,113,0,0,0,59,59,59,48,59,59,0,100,29,36},
+{36,31,32,31,87,88,89,98,0,0,19,19,19,19,19,19,0,100,32,36},
+{36,31,32,33,101,71,103,98,0,0,19,19,19,19,19,19,0,100,31,36},
+{36,30,32,30,101,70,103,112,113,113,113,113,113,113,113,113,113,114,31,36},
+{36,36,36,36,101,71,103,36,36,36,36,36,36,36,36,36,36,36,36,36},
+};
+
+static const uint8_t level2[36][20] PROGMEM =
 {
 {1,1,1,36,1,1,1,1,36,38,38,36,1,1,1,1,1,1,36,1},
 {1,1,1,36,36,36,36,36,36,38,38,36,36,36,36,36,36,36,36,1},
@@ -123,4 +189,27 @@ static const uint16_t level2[36][20] PROGMEM =
 {1,1,1,8,1,1,1,1,1,36,37,37,36,1,1,1,1,1,8,1},
 {1,1,1,8,1,1,1,1,1,36,37,37,36,1,1,1,1,1,8,1},
 
+};
+
+static const uint8_t level1_Red_House_F1[8][8] PROGMEM =
+{
+	{124,124,124,124,124,124,124,124},
+	{1,1,1,1,98,1,1,1},
+	{1,1,1,1,98,1,65,1},
+	{1,1,1,1,98,1,1,1},
+	{1,1,1,1,112,1,113,113},
+	{1,1,1,1,1,1,1,1},
+	{1,1,1,1,1,1,1,1},
+	{1,2,3,4,1,1,1,1},
+};
+static const uint8_t level1_Red_House_F2[8][8] PROGMEM =
+{
+{124,124,124,124,124,124,124,124},
+{1,1,1,45,46,1,1,1},
+{1,65,1,1,1,1,1,1},
+{1,1,1,1,1,1,1,1},
+{1,1,1,1,1,1,1,1},
+{1,1,1,1,1,1,1,1},
+{10,1,1,1,1,1,1,1},
+{24,22,1,1,1,1,1,1},
 };

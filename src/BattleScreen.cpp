@@ -50,13 +50,14 @@ void Battle::input() {
 }
 
 void Battle::menuSelect() {
-  arduboy.print("testing");
   if(arduboy.justPressed(A_BUTTON)) 
   {
-    showRightMenu = false;
-
     if (arrowLoc == 0) 
-      d.printDialog("You deal 5 damage!, wow you're so cool");
+    {
+        d.printDialog(("You deal %d damage!"));
+        if(showRightMenu == false)
+          mon[0].hp -= mon[0].attack;
+    }
     if (arrowLoc == 1) 
       d.printDialog("You used a Potion!     ");
     if (arrowLoc == 2)
@@ -64,7 +65,8 @@ void Battle::menuSelect() {
       d.printDialog("You ran away...         ");
         if(!d.getOpen())
           endBattle();
-    } 
+    }
+    showRightMenu = false;
   }
 }
 
@@ -89,6 +91,7 @@ void Battle::draw()
  {
     d.drawDialogBox();
     Sprites::drawOverwrite(mon[0].x, 0, Enemies, randEnemy);
+    arduboy.print(mon[0].hp);
 
     if (showRightMenu) 
       rightMenu();

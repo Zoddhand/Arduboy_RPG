@@ -27,6 +27,10 @@ void Dialog::printDialog(const char* t) {
   setText(t);
 }
 
+void Dialog:: update(uint8_t cl)
+{
+  currentLevel = cl;
+}
 void Dialog::draw()
 {
   print();
@@ -85,8 +89,8 @@ void Dialog::toggle() {
   typeWriterEffect = true;
 }
 
-void Dialog::checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char* text) {
-  if ((int)(p.entity.x + 8) / tileSize == x && (int)(p.entity.y) / tileSize == y) {
+void Dialog::checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char* text, uint8_t level = 1) {
+  if ((int)(p.entity.x + 8) / tileSize == x && (int)(p.entity.y) / tileSize == y && curLevel == level && p.entity.dir == UP) {
       printDialog(text);
   }
 }
@@ -96,5 +100,6 @@ const bool Dialog::getOpen() {
 }
 
 void Dialog::setText(const char* text) {
+    textToPrint = nullptr;
     textToPrint = text;
 }
