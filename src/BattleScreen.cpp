@@ -54,7 +54,7 @@ void Battle::menuSelect() {
   {
     if (arrowLoc == 0) 
     {
-        d.printDialog(("You deal %d damage! This is a Test of the dialog box system."));
+        d.printDialog(("You deal %d damage! hello my name is kelly williamson and i'm super awesome your mom is gay and your dad smells of elderberries."));
         if(showRightMenu == false)
           mon[0].hp -= mon[0].attack;
     }
