@@ -53,6 +53,7 @@ void Dialog::print() {
   
 
   while (currentPos < textLength && linesPrinted < 3) {
+    arduboy.print(delay);
     if (currentPageLines == 0) {
       arduboy.fillRect(3, 35, 120, 24, BLACK);
     }
@@ -106,6 +107,7 @@ void Dialog::print() {
 void Dialog::toggle() {
   open = !open;
   typeWriterEffect = true;
+  delay = 1000;
 }
 
 void Dialog::checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char* text, uint8_t level = 1) {
