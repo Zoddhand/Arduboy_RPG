@@ -8,13 +8,14 @@ extern uint8_t mapSizeY;
 extern uint8_t mapSizeX;
 extern uint16_t fullMapHeight;
 extern uint16_t fullMapWidth;
+extern uint8_t curLevel;
 // Constants
 constexpr uint8_t tileSize PROGMEM  = 16;
 constexpr uint8_t screenSizeX PROGMEM = 128;
 constexpr uint8_t screenSizeY PROGMEM = 64;
 constexpr uint8_t numLevels = 5 + 1;
 
-static uint8_t curLevel = 1;
+
 
 
 static const uint8_t frameRate = 60;

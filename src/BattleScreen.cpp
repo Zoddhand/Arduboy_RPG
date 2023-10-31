@@ -54,7 +54,7 @@ void Battle::menuSelect() {
   {
     if (arrowLoc == 0) 
     {
-        d.printDialog(("You deal %d damage!"));
+        d.printDialog(("You deal %d damage! This is a Test of the dialog box system."));
         if(showRightMenu == false)
           mon[0].hp -= mon[0].attack;
     }

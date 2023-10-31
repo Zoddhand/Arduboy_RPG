@@ -16,10 +16,11 @@ uint8_t mapSizeY = 18;
 uint8_t mapSizeX = 20;
 uint16_t fullMapHeight = (mapSizeY * tileSize);
 uint16_t fullMapWidth = (mapSizeX * tileSize);
+uint8_t curLevel = 1;
 
 const char* dialogs[] = {
-  "Milf Ketchum's Home... It's Unlocked.", // 0
-  "Gary's Hot Sisters Home.", // 1
+  "Reds Home... It's Unlocked.", // 0
+  "Blue's Home.", // 1
   "Thank you for staying off the flowers.", // 2
   "Welcome to Pallet Town.", // 3
   "This is supposed to be a TV." // 4 

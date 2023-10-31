@@ -5,7 +5,6 @@
 Map::Map() {}
 
 void Map::draw(Camera c, uint8_t level) {
-    currentLevel = level;
     currentLevelArray = nullptr;
     currentLevelArray = getLevel(level);
 

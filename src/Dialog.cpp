@@ -35,9 +35,10 @@ void Dialog::draw()
 {
   print();
 }
-void Dialog::print(){
+////////////////////////////////////////////////////////////////////////////////////////
+void Dialog::print() {
   if (!open || textToPrint == nullptr) {
-      return; // Dialog is closed or no text to print
+    return; // Dialog is closed or no text to print
   }
 
   drawDialogBox();
@@ -47,8 +48,14 @@ void Dialog::print(){
   uint8_t lineLength = 20;
   uint8_t textLength = strlen(textToPrint);
   uint8_t currentPos = 0;
+  uint8_t linesPrinted = 0;
+  uint8_t currentPageLines = 0;
+  
 
-  while (currentPos < textLength) {
+  while (currentPos < textLength && linesPrinted < 3) {
+    if (currentPageLines == 0) {
+      arduboy.fillRect(3, 35, 120, 24, BLACK);
+    }
     uint8_t lineStart = currentPos;
     uint8_t lineEnd = min(currentPos + lineLength, textLength);
     int lastSpace = -1;
@@ -65,25 +72,37 @@ void Dialog::print(){
     for (uint8_t i = lineStart; i < lineEnd; ++i) {
       if (typeWriterEffect) {
         arduboy.write(textToPrint[i]);
-        arduboy.delayByte(50);
+        arduboy.delayShort(50);
         arduboy.display();
       } else {
         arduboy.write(textToPrint[i]);
       }
     }
 
-    arduboy.setCursor(3, arduboy.getCursorY() + 8);
-    if (currentPos < textLength) arduboy.setCursor(3, arduboy.getCursorY());
+    // If we are on the 3rd line, reset the cursor position and manage pages
+    if (++currentPageLines == 3) {
+      linesPrinted++;
+      currentPageLines = 0;
+      arduboy.setCursor(3, 35);
 
+      // Introduce a delay after the 3rd line of each page except the last one
+      if (linesPrinted <= 2) {
+        arduboy.delayShort(delay);  // Adjust the delay time as needed
+      }
+    } else {
+      arduboy.setCursor(3, arduboy.getCursorY() + 8);
+    }
     currentPos = lineEnd;
   }
-
+  arduboy.setCursor(0, 0);
   if (typeWriterEffect && currentPos == textLength) {
     typeWriterEffect = false;
+    delay = 0;
   }
-  arduboy.setCursor(0, 0);
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////
 void Dialog::toggle() {
   open = !open;
   typeWriterEffect = true;

@@ -26,4 +26,6 @@ private:
   uint8_t currentLevel;
   bool typeWriterEffect;  // Flag to control typewriter effect
   const char* textToPrint;
+  uint8_t currentPage;
+  uint16_t delay = 1000;
 };

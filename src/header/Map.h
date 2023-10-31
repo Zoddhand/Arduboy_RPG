@@ -13,7 +13,6 @@ class Map {
     void draw(Camera, uint8_t level); // Pass the current level as a parameter
     int getTile(int x, int y);
     private:
-      uint8_t currentLevel;
       const uint8_t* getLevel(uint8_t);
     const uint8_t* currentLevelArray = nullptr;
 };
