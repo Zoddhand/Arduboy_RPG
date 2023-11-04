@@ -4,9 +4,8 @@
 
 #define length(array) ((sizeof(array)) / (sizeof(array[0])))
 
-bool open = false;
 
-Dialog::Dialog() : typeWriterEffect(false) {}
+Dialog::Dialog() { s.typeWriterEffect = false; }
 
 void Dialog::drawDialogBox() {
   for (uint8_t k = 32, frame = 0; k < 64; k += 16) {
@@ -27,9 +26,8 @@ void Dialog::printDialog(const char* t) {
   setText(t);
 }
 
-void Dialog:: update(uint8_t cl)
+void Dialog:: update()
 {
-  currentLevel = cl;
 }
 void Dialog::draw()
 {
@@ -37,7 +35,7 @@ void Dialog::draw()
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 void Dialog::print() {
-  if (!open || textToPrint == nullptr) {
+  if (!s.open || s.textToPrint == nullptr) {
     return; // Dialog is closed or no text to print
   }
 
@@ -46,14 +44,13 @@ void Dialog::print() {
   arduboy.setCursor(3, 35);
   arduboy.setTextWrap(false);
   uint8_t lineLength = 20;
-  uint8_t textLength = strlen(textToPrint);
+  uint8_t textLength = strlen(s.textToPrint);
   uint8_t currentPos = 0;
   uint8_t linesPrinted = 0;
   uint8_t currentPageLines = 0;
   
 
   while (currentPos < textLength && linesPrinted < 3) {
-    arduboy.print(delay);
     if (currentPageLines == 0) {
       arduboy.fillRect(3, 35, 120, 24, BLACK);
     }
@@ -62,7 +59,7 @@ void Dialog::print() {
     int lastSpace = -1;
 
     for (uint8_t i = lineEnd - 1; i >= lineStart; --i) {
-      if (textToPrint[i] == ' ') {
+      if (s.textToPrint[i] == ' ') {
         lastSpace = i;
         break;
       }
@@ -71,12 +68,12 @@ void Dialog::print() {
     lineEnd = (lastSpace != -1) ? lastSpace + 1 : lineEnd;
 
     for (uint8_t i = lineStart; i < lineEnd; ++i) {
-      if (typeWriterEffect) {
-        arduboy.write(textToPrint[i]);
+      if (s.typeWriterEffect) {
+        arduboy.write(s.textToPrint[i]);
         arduboy.delayShort(50);
         arduboy.display();
       } else {
-        arduboy.write(textToPrint[i]);
+        arduboy.write(s.textToPrint[i]);
       }
     }
 
@@ -96,8 +93,8 @@ void Dialog::print() {
     currentPos = lineEnd;
   }
   arduboy.setCursor(0, 0);
-  if (typeWriterEffect && currentPos == textLength) {
-    typeWriterEffect = false;
+  if (s.typeWriterEffect && currentPos == textLength) {
+    s.typeWriterEffect = false;
     delay = 0;
   }
 }
@@ -105,8 +102,8 @@ void Dialog::print() {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 void Dialog::toggle() {
-  open = !open;
-  typeWriterEffect = true;
+  s.open = !s.open;
+  s.typeWriterEffect = true;
   delay = 1000;
 }
 
@@ -117,10 +114,10 @@ void Dialog::checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, co
 }
 
 const bool Dialog::getOpen() {
-  return open;
+  return s.open;
 }
 
 void Dialog::setText(const char* text) {
-    textToPrint = nullptr;
-    textToPrint = text;
+    s.textToPrint = nullptr;
+    s.textToPrint = text;
 }

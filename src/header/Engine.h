@@ -15,11 +15,6 @@ constexpr uint8_t screenSizeX PROGMEM = 128;
 constexpr uint8_t screenSizeY PROGMEM = 64;
 constexpr uint8_t numLevels = 5 + 1;
 
-
-
-
-static const uint8_t frameRate = 60;
-
 class Engine {
 public:
     Engine();
@@ -38,5 +33,7 @@ public:
 
 private:
     void checkSigns();
+    void printAtPlayer(const uint8_t* , uint8_t , uint8_t frame = 0);
+    const uint8_t frameRate = 60;
 };
 

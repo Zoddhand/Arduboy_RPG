@@ -1,82 +1,30 @@
 #include "header/GameObject.h"
-#include "header/Engine.h"
-#include "header/Sprites.h"
-#include "header/Camera.h"
 
-GameObject::GameObject()
-{
+GameObject::GameObject(const char* name) {
+    entity.name = name;
+    entity.x = 0;
+    entity.y = 0;
+    entity.speed = 1;
+    entity.velx = 0;
+    entity.vely = 0;
+    frame = 0;
 }
 
-void GameObject::input()
+void GameObject::setBitmapData(const uint8_t* down,const uint8_t* left,const uint8_t* right,const uint8_t* up)
 {
-
-    // Reset velocities
-    entity.velX = 0;
-    entity.velY = 0;
-
-    // Horizontal movement
-    if (arduboy.pressed(LEFT_BUTTON))
-    {
-        entity.velX = -entity.speed;
-        entity.dir = LEFT;
-        spr_frame = HERO_WALK_LEFT;
-        mask_frame = HERO_WALK_LEFT_MASK;
-    }
-    else if (arduboy.pressed(RIGHT_BUTTON))
-    {
-        entity.velX = entity.speed;
-        entity.dir = RIGHT;
-        spr_frame = HERO_WALK_RIGHT;
-        mask_frame = HERO_WALK_RIGHT_MASK;
-    }
-
-    // Vertical movement
-    if (arduboy.pressed(UP_BUTTON))
-    {
-        entity.velY = -entity.speed;
-        entity.dir = UP;
-        spr_frame = HERO_WALK_UP;
-        mask_frame = HERO_WALK_VERT_MASK;
-    }
-    else if (arduboy.pressed(DOWN_BUTTON))
-    {
-        entity.velY = entity.speed;
-        entity.dir = DOWN;
-        spr_frame = HERO_WALK_DOWN;
-        mask_frame = HERO_WALK_VERT_MASK;
-    }
-
-    // Screen boundaries
-    if (entity.x < 0)
-    {
-        entity.x = 0;
-    }
-    else if (entity.x > fullMapWidth - tileSize)
-    {
-        entity.x = fullMapWidth - tileSize;
-    }
-
-    if (entity.y == -1)
-    {
-        entity.y = -1;
-    }
-    else if (entity.y > fullMapHeight - tileSize)
-    {
-        entity.y = fullMapHeight - tileSize;
-    }
-    
-    // This basically fixes letting you slide on the wall with two buttons pressed. if we're going down or up and not touching a wall, dont allow velX movement.
-    if(entity.dir == DOWN && !Engine::checkCol(entity.x + entity.velX, entity.y + entity.velY) || entity.dir == UP && !Engine::checkCol(entity.x + entity.velX, entity.y + entity.velY))
-      entity.velX = 0;
+  image[DOWN] = down;
+  image[LEFT] = left;
+  image[RIGHT] = right;
+  image[UP] = up;
 }
 
-void GameObject::update(uint8_t dt) {
-    deltaTime = dt;
-    animate();
+void GameObject::update(uint8_t dt)
+{
+  animate();
 
-    // Calculate the intended new position for the player
-    float newX = entity.x + entity.velX;
-    float newY = entity.y + entity.velY;
+  // Calculate the intended new position for the player
+    float newX = entity.x + entity.velx;
+    float newY = entity.y + entity.vely;
 
     // Check for collisions before updating the position
     if (!Engine::checkCol(newX, entity.y)) {
@@ -90,90 +38,25 @@ void GameObject::update(uint8_t dt) {
 
 void GameObject::draw(float offX, float offY)
 {
-  int fps = 1000 / deltaTime;
-  Sprites::drawExternalMask(entity.x - (offX * tileSize),entity.y - (offY * tileSize), spr_frame, mask_frame,frame, frame);
+  Sprites::drawPlusMask(entity.x - (offX * tileSize),entity.y - (offY * tileSize), image[entity.dir], frame);
 }
 
 void GameObject::animate()
 {
-  switch (entity.dir)
-  {
-    case DOWN:
-      if(entity.velY == 0)
-      {
-        mask_frame = HERO_WALK_VERT_MASK;
-        spr_frame = HERO_WALK_DOWN;
-        frame = 2;
-      }
-      break;
-    case LEFT:
-      if(entity.velX == 0)
-      {
-        mask_frame = HERO_WALK_LEFT_MASK;
-        spr_frame = HERO_WALK_LEFT;
-        frame = 2;
-      }
-      break;
-    case RIGHT:
-      if(entity.velX == 0)
-      {
-        mask_frame = HERO_WALK_RIGHT_MASK;
-        spr_frame = HERO_WALK_RIGHT;
-        frame = 2;
-      }
-      break;
-    case UP:
-      if(entity.velY == 0)
-      {
-        mask_frame = HERO_WALK_VERT_MASK;
-        spr_frame = HERO_WALK_UP;
-        frame = 2;
-      }
-      break;
-  }
-  
-  // Animate frame rate
+    // Animate frame rate
   if (arduboy.everyXFrames(15))
   {
     /* walking frame animations */
-    if(entity.velX != 0 || entity.velY != 0)
-      frame ++;
+    if(entity.velx != 0 || entity.vely != 0)
+      frame += 1;
     if(frame > 3)
       frame = 0;
   }
+
+  if(entity.vely == 0 && entity.velx == 0)
+  {
+    frame = 2;
+  }
+  arduboy.println("Frame:");
+  arduboy.print(frame);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

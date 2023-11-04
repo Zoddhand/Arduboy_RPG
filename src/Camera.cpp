@@ -2,13 +2,15 @@
 
 Camera::Camera()
 {
+  c.OffsetX = 0;
+  c.OffsetY = 0;
 }
 
 void Camera::update(GameObject p) {
-  cOffsetX = (p.entity.x / tileSize) - halfVisibleTilesX + 0.5f;
-  cOffsetY = (p.entity.y / tileSize) - halfVisibleTilesY + 0.5f;
+  c.OffsetX = (p.entity.x / tileSize) - halfVisibleTilesX + 0.5f;
+  c.OffsetY = (p.entity.y / tileSize) - halfVisibleTilesY + 0.5f;
 
   // Clamp offsets
-  cOffsetX = fmaxf(0.0f, fminf(cOffsetX, static_cast<float>(mapSizeX - visibleTilesX)));
-  cOffsetY = fmaxf(0.0f, fminf(cOffsetY, static_cast<float>(mapSizeY - visibleTilesY)));
+  c.OffsetX = fmaxf(0.0f, fminf(c.OffsetX, static_cast<float>(mapSizeX - visibleTilesX)));
+  c.OffsetY = fmaxf(0.0f, fminf(c.OffsetY, static_cast<float>(mapSizeY - visibleTilesY)));
 }

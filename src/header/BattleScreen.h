@@ -39,4 +39,6 @@ private:
   bool ranAway = false;
   bool showRightMenu;
   void rightMenu();
+  uint8_t monID;
+  uint8_t monStartX;
 };

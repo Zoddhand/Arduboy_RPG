@@ -8,14 +8,14 @@ void Map::draw(Camera c, uint8_t level) {
     currentLevelArray = nullptr;
     currentLevelArray = getLevel(level);
 
-    const uint8_t startRow = c.cOffsetY;
+    const uint8_t startRow = c.c.OffsetY;
     const uint8_t endRow = startRow + c.visibleTilesY + 1;
-    const uint8_t startCol = c.cOffsetX;
+    const uint8_t startCol = c.c.OffsetX;
     const uint8_t endCol = startCol + c.visibleTilesX + 1;
 
     for (uint8_t i = startRow; i < endRow; ++i) {
         for (uint8_t k = startCol; k < endCol; ++k) {
-            Sprites::DrawTiles((k - c.cOffsetX) * tileSize, (i - c.cOffsetY) * tileSize, Tileset, pgm_read_byte(&(currentLevelArray[i * mapSizeX + k])));
+            Sprites::DrawTiles((k - c.c.OffsetX) * tileSize, (i - c.c.OffsetY) * tileSize, Tileset, pgm_read_byte(&(currentLevelArray[i * mapSizeX + k])));
         }
     }
 }

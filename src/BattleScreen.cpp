@@ -3,6 +3,9 @@
 #include "header/BattleScreen.h"
 #include "header/Dialog.h"
 #include "header/Sprites.h"
+#include "header/Monster.h"
+
+Monster monster;
 
 static constexpr Point arrowPoint[3] = {
   {71, 36},      // Point 1
@@ -14,6 +17,7 @@ Battle::Battle(Dialog& dialog) : arrowLoc(0), battle(false)
 {
   d = dialog;
   uint8_t tmp;
+  monStartX = 128;
   for(int8_t i = 0 ; i <= 26; i ++)
   {
     tmp = (rand() % 20) + 1;
@@ -56,7 +60,7 @@ void Battle::menuSelect() {
     {
         d.printDialog(("You deal %d damage!"));
         if(showRightMenu == false)
-          mon[0].hp -= mon[0].attack;
+          monster.takeDamage(monster.getAttack());
     }
     if (arrowLoc == 1) 
       d.printDialog("You used a Potion!     ");
@@ -72,11 +76,13 @@ void Battle::menuSelect() {
 
 void Battle::startBattle() {
   showRightMenu = true;
+  monID = (rand() % 26) + 1;
+  monster = MonsterFactory::createRandomMonster();
 }
 
 void Battle::endBattle() {
   battle = false;
-  mon[0].x = 128;
+  monStartX = 128;
   showRightMenu = false;
 }
 
@@ -85,13 +91,27 @@ void Battle::update()
   monsterTransition();
   if(!d.getOpen())
     showRightMenu = true;
+  if(monster.getHP() == 0)
+  {
+    d.printDialog("You won!");
+      if(!d.getOpen())
+      {
+        arduboy.delayShort(3000);
+        endBattle();
+      }
+  }
 }
 
 void Battle::draw()
  {
     d.drawDialogBox();
-    Sprites::drawOverwrite(mon[0].x, 0, Enemies, randEnemy);
-    arduboy.print(mon[0].hp);
+    Sprites::drawOverwrite(monStartX, 0, Enemies, monster.getID() - 1);
+    arduboy.print("ID: ");
+    arduboy.print(monster.getID());
+    arduboy.print("\nName:");
+    arduboy.print(monster.getName());
+    arduboy.print("\nHealth: ");
+    arduboy.print(monster.getHP());
 
     if (showRightMenu) 
       rightMenu();
@@ -113,8 +133,8 @@ void Battle::rightMenu()
 
 void Battle::monsterTransition()
 {
-  mon[0].x --;
-  if(mon[0].x <= 48) mon[0].x = 48;
+  monStartX --;
+  if(monStartX <= 48) monStartX = 48;
 }
 
 void Battle::flashScreen() {

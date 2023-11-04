@@ -4,10 +4,6 @@
 #include "GameObject.h"
 #include "Map.h"
 
-
-extern bool open;
-extern bool buttonWasPressed;
-
 class Dialog {
 public:
   Dialog();
@@ -17,15 +13,17 @@ public:
   void checkAndPrintDialog(GameObject& p, Map& m, uint8_t x, uint8_t y, const char*, uint8_t level = 1);
   const bool getOpen();
   void draw();
-  void update(uint8_t);
+  void update();
 
 private:
   void setText(const char* text);
   void print();
   void toggle();
-  uint8_t currentLevel;
-  bool typeWriterEffect;  // Flag to control typewriter effect
-  const char* textToPrint;
-  uint8_t currentPage;
   uint16_t delay = 1000;
+  struct S
+  {
+    bool open : 1;
+    bool typeWriterEffect : 1;
+    const char* textToPrint;
+  }s;
 };

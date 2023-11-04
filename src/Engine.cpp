@@ -4,8 +4,10 @@
 #include "header/Camera.h"
 #include "header/Dialog.h"
 #include "header/BattleScreen.h"
+#include "header/Player.h"
 
-GameObject p;
+
+Player p("Hero");
 Map m;
 Camera cam;
 Dialog d;
@@ -32,13 +34,17 @@ void Engine::setup() {
     arduboy.begin();
     arduboy.setFrameRate(frameRate);
     arduboy.initRandomSeed();
+
+    p.setBitmapData(HERO_WALK_DOWN, HERO_WALK_LEFT, HERO_WALK_RIGHT, HERO_WALK_UP);
+    p.entity.x = 160;
+    p.entity.y = 0;
 }
 
 void Engine::input() {
     arduboy.pollButtons();
     if (!d.getOpen() && !b.getBattleState())
         p.input();
-    else { p.entity.velX = 0; p.entity.velY = 0; }
+    else { p.entity.velx = 0; p.entity.vely = 0; }
 
     if (b.getBattleState())
         b.input();
@@ -48,31 +54,32 @@ void Engine::input() {
 
 void Engine::update(uint8_t dt) {
     deltaTime = dt;
-    if (m.getTile(p.entity.x / tileSize, p.entity.y / tileSize) == 37 && p.entity.velX + p.entity.velY >= 1)
+    if (m.getTile(p.entity.x / tileSize, p.entity.y / tileSize) == 127 && p.entity.velx + p.entity.vely >= 1)
         b.getRandomEncounter();
-    cam.update(p);
-    d.update(curLevel);
-    p.update(deltaTime);
+    d.update();
     if (b.getBattleState())
-        b.update();
+      b.update();
+    else 
+    {
+      cam.update(p);
+      p.update(deltaTime);
+      changeLevel(&p);
+    }
 }
 
 void Engine::draw() {
     if (!b.getBattleState()) {
         m.draw(cam, curLevel);
-        p.draw(cam.cOffsetX, cam.cOffsetY);
-        changeLevel(&p);
-    }
-    if (b.getBattleState())
-        b.draw();
-    else
+        printAtPlayer(Grass, 127);
+        p.draw(cam.c.OffsetX, cam.c.OffsetY);
         d.draw();
+    }
+    else
+        b.draw(); 
 }
 
 static bool Engine::checkCol(float x, float y)
 {
-    p.entity.center.x = (p.entity.x + tileSize / 2);
-    p.entity.center.y = (p.entity.y + tileSize / 2);
     //Draw col rect
     //arduboy.drawRect((p.entity.x + 4) - cam.cOffsetX * tileSize, (p.entity.y + 4) - cam.cOffsetY * tileSize , tileSize / 2, tileSize / 2, WHITE);
     const uint8_t colBoxSize = (tileSize / 2);
@@ -105,7 +112,7 @@ void Engine::checkSigns()
     d.checkAndPrintDialog(p, m, 4, 1, dialogs[4],REDS_HOUSE_F2);
   }
 }
-
+/*
 static bool Engine::checkTile(const Point& point, uint8_t tileNumber)
 {
     uint8_t mapX = point.x / tileSize;
@@ -116,7 +123,22 @@ static bool Engine::checkTile(const Point& point, uint8_t tileNumber)
 
     // Check if the tile at the specified point equals the given tile number
     return (currentTile == tileNumber);
-}
+}*/
 
+void Engine::printAtPlayer(const uint8_t* bm, uint8_t tileIndex, uint8_t frame = 0)
+{
+    // Calculate the tile coordinates based on the player's position
+    int tileX = (p.entity.x + tileSize / 2) / tileSize;
+    int tileY = (p.entity.y + tileSize / 2) / tileSize;
+
+    // Calculate the screen coordinates based on the tile coordinates and camera offset
+    int x = (tileX - cam.c.OffsetX) * tileSize;
+    int y = (tileY - cam.c.OffsetY) * tileSize;
+
+    // Draw a new tile at the calculated screen coordinates if the current tile is 127
+    if (m.getTile(tileX, tileY) == tileIndex) {
+        Sprites::drawOverwrite(x, y, bm, frame);
+    }
+}
 
 
